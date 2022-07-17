@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Item = ({ img, title, price, totalSold }) => {
+export const Item = ({ img, title, price }) => {
   return (
     <div className='h-full border border-gray-600 rounded-lg p-6'>
       <img
@@ -10,7 +10,6 @@ export const Item = ({ img, title, price, totalSold }) => {
       />
       <p className='text-gray-800 mb-1 text-sm'>{title}</p>
       <h5 className='text-gray-800 mb-1 font-medium text-lg'>$ {price}</h5>
-      <p className='text-gray-500 text-xs'>{totalSold} sold</p>
     </div>
   );
 };
