@@ -1,8 +1,12 @@
 import Head from 'next/head';
 import { Item } from '../components/Item';
 import LogoIcon from '../components/LogoIcon';
+import { CanvasClient, EnhancerBuilder, enhance } from '@uniformdev/canvas';
+import { CANVAS_BIGCOMMERCE_PARAMETER_TYPES } from '@uniformdev/canvas-bigcommerce';
+import { bigCommerceEnhancer } from '../components/utils';
 
-export default function Home() {
+export default function Home({ composition }) {
+  const {slots} = composition
   return (
     <div>
       <Head>
@@ -30,7 +34,7 @@ export default function Home() {
           <div className='w-1/2 h-full'>
             <img
               alt='hero'
-              src='/hero.jpg'
+              src={slots.itemSlug[0].parameters.img.value[0].url}
               className='h-full w-full object-fit'
             />
           </div>
@@ -41,27 +45,43 @@ export default function Home() {
             featured products
           </h3>
           <div className='grid grid-col-1 lg:grid-cols-3 w-full h-96'>
-            <Item
-              img='1.jpg'
-              title='Pattern 1 active layout'
-              price='450'
-              totalSold='900'
+            {slots.itemSlug.slice(1).map((item, i) => (
+              <Item
+              key={i}
+              img={item.parameters.img.value[0].url}
+              title={item.parameters.details.value.name}
+              price={item.parameters.details.value.price}
             />
-            <Item
-              img='2.jpg'
-              title='Pattern 2 active layout'
-              price='270'
-              totalSold='700'
-            />
-            <Item
-              img='3.jpg'
-              title='Pattern 3 active layout'
-              price='700'
-              totalSold='2800'
-            />
+            ))}
           </div>
         </section>
       </main>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  //fetching data from uniform
+  const client = new CanvasClient({
+    apiKey: process.env.NEXT_PUBLIC_API_KEY,
+    projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  });
+
+  const { composition } = await client.getCompositionBySlug({
+    slug: 'homepage',
+  });
+
+  //enhancing with bigcommerce
+  const enhancers = new EnhancerBuilder().parameterType(
+    CANVAS_BIGCOMMERCE_PARAMETER_TYPES,
+    bigCommerceEnhancer
+  );
+
+  await enhance({ composition, enhancers, context: {} });
+
+  return {
+    props: {
+      composition,
+    },
+  };
 }

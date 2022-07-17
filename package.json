@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@uniformdev/canvas": "^16.2.4",
+    "@uniformdev/canvas-bigcommerce": "^16.2.4",
     "next": "12.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
