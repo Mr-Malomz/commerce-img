@@ -10,7 +10,6 @@ export const bigCommerceEnhancer = createBigCommerceEnhancer({
   }),
   createProductOptions: () => {
     return {
-      // Modify or exclude this property if you want more fields returned from the BigCommerce API
       include_fields: ['id', 'name', 'price'],
     };
   },
